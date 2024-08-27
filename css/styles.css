@@ -1,0 +1,121 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #EAEAEA;
+    color: #333;
+}
+
+#titulo-productos {
+    text-align: center;
+    font-size: 1.5em;
+    color: #12172c;
+    padding: 10px;
+    margin: 80px 10px auto;
+    width: auto;
+}
+
+#search {
+    display: block;
+    margin: 20px auto;
+    padding: 12px;
+    width: 80%;
+    max-width: 500px;
+    font-size: 1em;
+    border: 2px solid #3a3f51;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease-in-out;
+}
+
+#search:focus {
+    outline: none;
+}
+
+#search::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+
+#loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#resumen {
+    display: none;
+}
+
+
+.card-container {
+    display: flex;
+    flex-direction: column; /* Las tarjetas se apilan verticalmente */
+    align-items: center; /* Centrar las tarjetas horizontalmente */
+    margin: 20px;
+    gap: 20px; /* Espacio entre cada tarjeta */
+}
+
+.card {
+    display: flex;
+    flex-direction: row; /* Los bloques dentro de la tarjeta se organizan en fila */
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* La tarjeta ocupa todo el ancho del contenedor */
+    max-width: 600px; /* Limita el ancho máximo de la tarjeta */
+    padding: 15px;
+    text-align: left; /* Alinear el texto a la izquierda */
+    overflow: hidden; /* Asegura que el contenido no exceda la tarjeta */
+}
+
+.card-text {
+    flex: 3; /* Bloque de texto ocupa 60% del ancho */
+    padding-right: 15px; /* Espacio entre el texto y la imagen */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centrar el contenido verticalmente */
+}
+
+.card-image {
+    flex: 2; /* Bloque de imagen ocupa 40% del ancho */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-image img {
+    width: 100%; /* La imagen ocupa el 100% del contenedor */
+    height: auto; /* La altura se ajusta automáticamente */
+    max-height: 100%; /* La altura máxima se ajusta a la del contenedor */
+    object-fit: cover; /* La imagen se ajusta y recorta para llenar el espacio */
+    border-radius: 8px; /* Redondear las esquinas de la imagen */
+}
+
+.card h2 {
+    font-size: 18px;
+    margin: 0 0 10px 0; /* Espacio debajo del título */
+}
+
+.card p {
+    font-size: 14px; /* Aumenta un poco el tamaño del texto para mejor legibilidad */
+    color: #555;
+    margin: 5px 0; /* Espacio entre los párrafos */
+}
+
+.description {
+    font-size: 14px; /* Aumenta un poco el tamaño del texto para mejor legibilidad */
+    color: #555;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limita la descripción a dos líneas */
+    -webkit-box-orient: vertical;
+}
+
+.card .price {
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
