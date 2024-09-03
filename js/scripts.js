@@ -144,7 +144,10 @@ async function enviarProducto(idProducto) {
 
     try {
         //Obtener la imagen como Blob
-        const responseImagen = await fetch(urlImagen);
+        const responseImagen = await fetch(urlImagen, {
+            mode: 'no-cors'
+        });
+        
         if (!responseImagen.ok) {
             mostrarModal('Error al enviar el producto');
             throw new Error('Error al descargar la imagen');
@@ -166,6 +169,7 @@ async function enviarProducto(idProducto) {
         //Enviar la solicitud POST
         const responsePost = await fetch(`https://web.chatia.app/api/v1/accounts/11/conversations/${id_conversacion}/messages`, {
             method: 'POST',
+            mode: 'no-cors',
             headers: {
                 'api_access_token': 'Zpzr1UXYh3CE6eah4ZGYyc86'
             },
