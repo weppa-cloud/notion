@@ -179,6 +179,6 @@ async function enviarProducto(idProducto) {
         mostrarModal('Producto enviado con éxito');
 
     } catch (error) {
-        mostrarModal('Error al enviar el producto');
+        mostrarModal('Error al enviar el producto General');
     }
 }
