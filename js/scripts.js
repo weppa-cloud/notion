@@ -145,7 +145,7 @@ async function enviarProducto(idProducto) {
     try {
         //Obtener la imagen como Blob
         const responseImagen = await fetch(urlImagen, {
-            mostrarModal('Error al obtener imagen para enviar');
+            mostrarModal('Error al obtener imagen para enviar')
         });
 
         // if (!responseImagen.ok) {
