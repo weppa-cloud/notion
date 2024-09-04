@@ -142,6 +142,9 @@ async function enviarProducto(idProducto) {
     const id_conversacion = eventData.data.conversation.id;
     const urlImagen = productoSeleccionado.property_url_foto_destacada || '../assets/images/default_image.png'; // Asegúrate de que este campo tenga la URL correcta
 
+
+    console.log("Antes del try");
+    
     try {
         //Obtener la imagen como Blob
         const responseImagen = await fetch(urlImagen);
@@ -150,6 +153,9 @@ async function enviarProducto(idProducto) {
             mostrarModal('Error al obtener el producto en responseImagen');
             throw new Error('Error al obtener el producto en responseImagen');
         }
+
+        console.log("Despues del fetch urlImagen");
+        
 
         const blob = await responseImagen.blob();
 
@@ -164,6 +170,9 @@ async function enviarProducto(idProducto) {
             \nTipo: ${productoSeleccionado.property_tipo.join(', ') || '-'}
             \nDestino: ${productoSeleccionado.property_destino?.join(', ') || '-'}`);
 
+        console.log("Antes de el fetch a chatia");
+        
+
         //Enviar la solicitud POST
         const responsePost = await fetch(`https://web.chatia.app/api/v1/accounts/11/conversations/${id_conversacion}/messages`, {
             method: 'POST',
@@ -173,6 +182,8 @@ async function enviarProducto(idProducto) {
             body: formData
         });
 
+        console.log("despues de el fetch a chatia");
+        
         const responseData = await responsePost.json();
         mostrarModal('Producto enviado con éxito');
 
