@@ -135,7 +135,7 @@ async function enviarProducto(idProducto) {
     const productoSeleccionado = productos.find(producto => producto.id === idProducto);
 
     if (!productoSeleccionado) {
-        mostrarModal('Error al enviar el producto');
+        mostrarModal('Error al enviar el producto - Producto seleccionado no existe');
         return;
     }
     
@@ -144,7 +144,9 @@ async function enviarProducto(idProducto) {
 
     try {
         //Obtener la imagen como Blob
-        const responseImagen = await fetch(urlImagen);
+        const responseImagen = await fetch(urlImagen, {
+            mostrarModal('Error al obtener imagen para enviar');
+        });
 
         // if (!responseImagen.ok) {
         //     mostrarModal('Error al enviar el producto');
