@@ -177,8 +177,8 @@ async function enviarProducto(idProducto) {
         mostrarModal('Producto enviado con éxito');
 
     } catch (error) {
-        console.log("Error general");
+        console.log("Error general", error);
         
-        mostrarModal('Error al enviar el producto General', error);
+        mostrarModal('Error al enviar el producto General');
     }
 }
