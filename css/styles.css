@@ -119,3 +119,23 @@ body {
     color: #333;
     margin-top: 10px;
 }
+
+
+.button-container {
+    text-align: center;
+    margin: 20px;
+}
+
+.button-container button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    background-color: #3a3f51;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button-container button:hover {
+    background-color: #5c637e;
+}

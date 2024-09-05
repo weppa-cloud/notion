@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="/css/modal.css"> <!-- Enlace al archivo modal.css -->
 </head>
 <body>
-    <h4 id="titulo-productos">Actividades</h4>
+    <!-- Botones para cambiar entre Actividades y Hoteles -->
+    <div class="button-container">
+        <button id="btn-actividades" onclick="cargarActividades()">Actividades</button>
+        <button id="btn-hoteles" onclick="cargarHoteles()">Hoteles</button>
+    </div>
+
+    <h4 id="titulo-productos"></h4>
     <div id="loading">
         <p>Loading...</p>
     </div>
