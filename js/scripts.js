@@ -146,6 +146,7 @@ async function enviarProducto(idProducto) {
     console.log("Antes del try");
     
     try {
+        console.log("Entró al try");
         //Obtener la imagen como Blob
         const responseImagen = await fetch(urlImagen);
 
