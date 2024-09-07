@@ -182,7 +182,7 @@ function mostrarHoteles(hoteles) {
                         <p>Destino: ${destino}</p>
                         
                         
-                        <button onclick="enviarProducto('${id}')">Enviar</button>
+                        <button onclick="enviarHotel('${id}')">Enviar</button>
                     </div>
                     <div class="card-image">
                         <img src=   "${imageUrl}" alt="${name}">
@@ -244,17 +244,29 @@ async function enviarProducto(idProducto) {
         return;
     }
     
-    // const id_conversacion = eventData.data.conversation.id;
-    const id_conversacion = '19666';
+    const id_conversacion = eventData.data.conversation.id;
+    // const id_conversacion = '19666';
     const urlImagen = productoSeleccionado.property_url_foto_destacada || '../assets/images/default_image.png'; // Asegúrate de que este campo tenga la URL correcta
-
+    const urlPage = productoSeleccionado.url;
 
     console.log("Antes del try");
     
     try {
         console.log("Entró al try");
         //Obtener la imagen como Blob
-        const responseImagen = await fetch(urlImagen);
+        // const responseImagen = await fetch(urlImagen);
+        // Enviar la URL de la imagen al webhook de n8n
+        
+        const responseImagen = await fetch('https://n8n.weppa.co/webhook/image-actividad', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: urlImagen }),
+        });
+
+        console.log("imagen de notion n8n: ", responseImagen);
+        
 
         if (!responseImagen.ok) {
             mostrarModal('Error al obtener el producto en responseImagen');
@@ -277,6 +289,84 @@ async function enviarProducto(idProducto) {
             \n${productoSeleccionado.property_descripci_n || 'Sin descripción'}
             \nTipo: ${productoSeleccionado.property_tipo.join(', ') || '-'}
             \nDestino: ${productoSeleccionado.property_destino?.join(', ') || '-'}`);
+
+        console.log("Antes de el fetch a chatia");
+        
+
+        //Enviar la solicitud POST
+        const responsePost = await fetch(`https://web.chatia.app/api/v1/accounts/11/conversations/${id_conversacion}/messages`, {
+            method: 'POST',
+            headers: {
+                'api_access_token': 'Zpzr1UXYh3CE6eah4ZGYyc86'
+            },
+            body: formData
+        });
+
+        console.log("despues de el fetch a chatia");
+        
+        const responseData = await responsePost.json();
+        mostrarModal('Producto enviado con éxito');
+
+    } catch (error) {
+        console.log("Error general", error);
+        
+        mostrarModal('Error al enviar el producto General');
+    }
+}
+
+
+async function enviarHotel(idProducto) {
+    // Obtener el producto correspondiente  
+    const productoSeleccionado = hoteles.find(producto => producto.id === idProducto);
+
+    if (!productoSeleccionado) {
+        mostrarModal('Error al enviar el producto - Producto seleccionado no existe');
+        return;
+    }
+    
+    const id_conversacion = eventData.data.conversation.id;
+    // const id_conversacion = '19666';
+    const urlImagen = productoSeleccionado.property_url_foto_destacada || '../assets/images/default_image.png'; // Asegúrate de que este campo tenga la URL correcta
+    const urlPage = productoSeleccionado.url;
+    const name = productoSeleccionado.name;
+
+    console.log("Antes del try");
+    
+    try {
+        console.log("Entró al try");
+        //Obtener la imagen como Blob
+        // const responseImagen = await fetch(urlImagen);
+        // Enviar la URL de la imagen al webhook de n8n
+        
+        const responseImagen = await fetch('https://n8n.weppa.co/webhook/image-hotel', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: name }),
+        });
+
+        console.log("imagen de notion n8n: ", responseImagen);
+        
+
+        if (!responseImagen.ok) {
+            mostrarModal('Error al obtener el producto en responseImagen');
+            throw new Error('Error al obtener el producto en responseImagen');
+        }
+
+        console.log("Despues del fetch urlImagen");
+        
+
+        const blob = await responseImagen.blob();
+        // const blob = productoSeleccionado.property_url_foto_destacada;
+
+        //Crear un FormData y agregar el archivo Blob
+        const formData = new FormData();
+        formData.append('attachments[]', blob, 'imagen.jpg'); // Puedes ajustar el nombre del archivo según sea necesario
+
+        // Agregar el contenido del mensaje
+        formData.append('content', `
+            *${productoSeleccionado.name}*`);
 
         console.log("Antes de el fetch a chatia");
         
