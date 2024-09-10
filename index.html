@@ -8,16 +8,17 @@
 </head>
 <body>
     <!-- Botones para cambiar entre Actividades y Hoteles -->
-    <div class="button-container">
+    <div class="button-container hidden">
         <button id="btn-actividades" onclick="cargarActividades()">Actividades</button>
         <button id="btn-hoteles" onclick="cargarHoteles()">Hoteles</button>
     </div>
 
     <h4 id="titulo-productos"></h4>
-    <div id="loading">
-        <p>Loading...</p>
-    </div>
     <input type="text" id="search" placeholder="Buscar..." onkeyup="filterProducts()">
+    <div id="loading">
+        <p>Cargando...</p>
+        <img src="https://weppa.cloud/wp-content/uploads/2024/08/cargando.gif" alt="Cargando...">
+    </div>
     <div id="resumen" class="card-container"></div> <!-- Div para mostrar el resumen -->
     
     <!-- Modal -->

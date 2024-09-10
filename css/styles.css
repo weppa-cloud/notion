@@ -9,7 +9,7 @@ body {
     font-size: 1.5em;
     color: #12172c;
     padding: 10px;
-    margin: 80px 10px auto;
+    margin: 10px auto;
     width: auto;
 }
 
@@ -36,11 +36,23 @@ body {
 }
 
 
-#loading {
+/* #loading {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+} */
+
+#loading {
+    display: none; /* Por defecto oculto */
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+}
+
+#loading img {
+    width: 100px;
+    height: 100px;
 }
 
 #resumen {
@@ -138,4 +150,9 @@ body {
 
 .button-container button:hover {
     background-color: #5c637e;
+}
+
+
+.hidden {
+    display: none;
 }
