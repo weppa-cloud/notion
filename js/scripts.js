@@ -2,6 +2,7 @@
 
 let productos = []; // Variable global para almacenar los productos
 let hoteles = [];
+let proveedores = [];
 let eventData = {};
 let selectedCategory = "actividades"; 
 
@@ -111,6 +112,48 @@ function cargarHoteles() {
 }
 
 
+// Función para cargar los proveedores
+function cargarProveedores() {
+
+    document.getElementById('titulo-productos').innerText = 'Proveedores';
+    selectedCategory = "proveedores"
+    limpiarBusqueda();
+
+    document.getElementById('resumen').innerHTML = ''; // Limpiar el contenido anterior
+    
+    document.getElementById('loading').style.display = 'block';
+
+    if (proveedores == '') {
+
+        let html = '';
+        html += '<p>Aqui van los hoteles</p>';
+    
+        // Enviar los datos a otra URL que devuelva hoteles
+        fetch('https://n8n.weppa.co/webhook/notion-proveedores', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventData) 
+        })
+        .then(response => response.json())
+        .then(proveedoresResponse => {
+            proveedores = proveedoresResponse || [];
+            document.getElementById('loading').style.display = 'none';
+            mostrarProveedores(proveedores);
+        })
+        .catch((error) => {
+            
+            document.getElementById('loading').style.display = 'none';
+        });
+    }else{
+        document.getElementById('loading').style.display = 'none';
+        mostrarProveedores(proveedores);
+    }
+
+
+}
+
 // Función para mostrar los productos
 function mostrarProductos(productos) {
     let html = '';
@@ -121,7 +164,7 @@ function mostrarProductos(productos) {
     }
 
     if (productos.length === 0) {
-        html += '<p>No hay resultados para la búsquedaaa.</p>';
+        html += '<p>No hay resultados para la búsqueda.</p>';
     } else {
         productos.forEach(producto => {
             const name = producto.name || 'Sin título';
@@ -159,7 +202,7 @@ function mostrarProductos(productos) {
 }
 
 
-// Función para mostrar los productos
+// Función para mostrar los hoteles
 function mostrarHoteles(hoteles) {
     let html = '';
 
@@ -173,11 +216,8 @@ function mostrarHoteles(hoteles) {
     } else {
         hoteles.forEach(producto => {
             const name = producto.name || 'Sin título';
-            // const description = producto.property_descripci_n || 'Sin descripción';
             const imageUrl = producto.property_fotos[0] || '/assets/images/default_image.png';
-            const destino = producto.property_ || '-';
-            // const price = producto.property_tarifa_en_doble || '';
-            // const tipo_actividad = producto.property_tipo.join(', ') || '-';
+            const destino = producto.property_destinos || '-';
             
             const id = producto.id;
 
@@ -203,22 +243,75 @@ function mostrarHoteles(hoteles) {
     
 }
 
+
+// Función para mostrar los Proveedores
+function mostrarProveedores(proveedores) {
+    let html = '';
+
+    // Si hoteles no es un array, conviértelo en un array
+    if (!Array.isArray(proveedores)) {
+        proveedores = [proveedores];
+    }
+
+    if (proveedores.length === 0) {
+        html += '<p>No hay resultados para la búsquedaaa.</p>';
+    } else {
+        proveedores.forEach(producto => {
+            const name = producto.name || 'Sin título';
+            const telefono = producto.property_tel_fono || '-';
+            const ciudad = producto.property_ciudad || '-';            
+            const descripcion = producto.property_descripci_n || '-';            
+            const id = producto.id;
+            
+            
+            html += `
+                <div class="card">
+                    <div class="card-text">
+                        <h2>${name}</h2>       
+                        <p>${descripcion}</p>                      
+                        <p>Ciudad: ${ciudad}</p>                      
+                        <button onclick="window.open('https://api.whatsapp.com/send?phone=${telefono.replace(/\s+/g, '')}', '_blank')">Contactar</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    document.getElementById('resumen').innerHTML = html;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('resumen').style.display = 'flex';
+    
+}
+
 // Función para filtrar los productos por nombre
 function filterProducts() {
     const query = document.getElementById('search').value.toLowerCase();
 
     if (selectedCategory == 'actividades'){
         const filteredProducts = productos.filter(producto => 
-            producto.name.toLowerCase().includes(query)
+            producto.name.toLowerCase().includes(query) ||
+            producto.property_descripci_n.toLowerCase().includes(query) ||
+            (Array.isArray(producto.property_tipo) && producto.property_tipo.some(tipo => tipo.toLowerCase().includes(query))) ||
+            (producto.property_destino && producto.property_destino.toLowerCase().includes(query))
+
         );
     
         mostrarProductos(filteredProducts); // Mostrar los productos filtrados
-    }else {
+    }else if (selectedCategory == 'hoteles') {
         const filteredProducts = hoteles.filter(producto => 
-            producto.name.toLowerCase().includes(query)
+            producto.name.toLowerCase().includes(query) ||
+            (Array.isArray(producto.property_destinos) && producto.property_destinos.some(destino => destino.toLowerCase().includes(query)))
         );
     
         mostrarHoteles(filteredProducts); // Mostrar los productos filtrados
+    }else if (selectedCategory == 'proveedores'){
+        const filteredProducts = proveedores.filter(producto => 
+            producto.name.toLowerCase().includes(query) ||
+            producto.property_descripci_n.toLowerCase().includes(query) ||
+            (Array.isArray(producto.property_ciudad) && producto.property_ciudad.some(ciudad => ciudad.toLowerCase().includes(query)))
+        );
+
+        mostrarProveedores(filteredProducts);
     }
 }
 
@@ -285,8 +378,8 @@ async function enviarProducto(idProducto) {
     // Mostrar el modal de "Enviando..." y deshabilitar el cierre
     mostrarModal('Enviando producto...', true); // El segundo argumento true deshabilita el cierre
 
-    const id_conversacion = eventData.data.conversation.id;
-    // const id_conversacion = '19666';
+    // const id_conversacion = eventData.data.conversation.id;
+    const id_conversacion = '19666';
     const urlImagen = productoSeleccionado.property_url_foto_destacada || '../assets/images/default_image.png';
     const urlPage = productoSeleccionado.url;
 
@@ -313,7 +406,7 @@ async function enviarProducto(idProducto) {
 
         // Agregar el contenido del mensaje
         formData.append('content', `
-            *${productoSeleccionado.name}*
+            *${productoSeleccionado.name.trim()}*
             \n${productoSeleccionado.property_descripci_n || 'Sin descripción'}
             \nTipo: ${productoSeleccionado.property_tipo.join(', ') || '-'}
             \nDestino: ${productoSeleccionado.property_destino?.join(', ') || '-'}`);
@@ -351,11 +444,12 @@ async function enviarHotel(idProducto) {
     // Mostrar el modal de "Enviando..." y deshabilitar el cierre
     mostrarModal('Enviando producto...', true); // El segundo argumento true deshabilita el cierre
     
-    const id_conversacion = eventData.data.conversation.id;
-    // const id_conversacion = '19666';
+    // const id_conversacion = eventData.data.conversation.id;
+    const id_conversacion = '19666';
     const urlImagen = productoSeleccionado.property_url_foto_destacada || '../assets/images/default_image.png'; // Asegúrate de que este campo tenga la URL correcta
     const urlPage = productoSeleccionado.url;
-    const name = productoSeleccionado.name;
+    const name = productoSeleccionado.name.trim();
+    const destino = productoSeleccionado.property_destinos;
     
     try {      
         const responseImagen = await fetch('https://n8n.weppa.co/webhook/image-hotel', {
@@ -380,7 +474,8 @@ async function enviarHotel(idProducto) {
 
         // Agregar el contenido del mensaje
         formData.append('content', `
-            *${productoSeleccionado.name}*`);
+            *${productoSeleccionado.name.trim()}*
+            \nDestino: ${productoSeleccionado.property_destinos}`);
         
 
         //Enviar la solicitud POST
