@@ -156,3 +156,19 @@ body {
 .hidden {
     display: none;
 }
+
+
+.button-container-info {
+    text-align: center;
+    /* margin: 20px; */
+}
+
+.button-container-info button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    background-color: #3a3f51;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
