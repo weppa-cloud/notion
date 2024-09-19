@@ -231,7 +231,7 @@ function mostrarHoteles(hoteles) {
                         <h2>${name}</h2>       
                         <p>Destino: ${destino}</p>
                         <div class="button-container-info ">                      
-                            <button onclick="enviarHotel('${id}')">Enviar información</button>
+                            <button onclick="enviarHotel('${id}')">Enviar fotos</button>
                         </div>
                     </div>
                     <div class="card-image">
@@ -452,40 +452,13 @@ async function enviarHotel(idProducto) {
     // Mostrar el modal de "Enviando..." y deshabilitar el cierre
     mostrarModal('Enviando Hotel...', true); // El segundo argumento true deshabilita el cierre
     
-    const id_conversacion = eventData.data.conversation.id;
-    // const id_conversacion = '19666';
+    // const id_conversacion = eventData.data.conversation.id;
+    const id_conversacion = '19666';
     const urlImagen = productoSeleccionado.property_url_foto_destacada || '../assets/images/default_image.png'; // Asegúrate de que este campo tenga la URL correcta
     const urlPage = productoSeleccionado.url;
     const name = productoSeleccionado.name.trim();
     const destino = productoSeleccionado.property_destinos;
     const cantidad = productoSeleccionado.property_fotos.length;
-
-    try {      
-        
-        //Crear un FormData y agregar el archivo Blob
-        const formData = new FormData();
-
-        // Agregar el contenido del mensaje
-        formData.append('content', `
-            *${productoSeleccionado.name.trim()}*
-            \nDestino: ${productoSeleccionado.property_destinos}`);
-        
-
-        //Enviar la solicitud POST
-        const responsePost = await fetch(`https://web.chatia.app/api/v1/accounts/11/conversations/${id_conversacion}/messages`, {
-            method: 'POST',
-            headers: {
-                'api_access_token': 'Zpzr1UXYh3CE6eah4ZGYyc86'
-            },
-            body: formData
-        });
-        
-        // const responseData = await responsePost.json();
-        // mostrarModal('Producto enviado con éxito');
-
-    } catch (error) {        
-        mostrarModal('Error al enviar el hotel');
-    }
 
 
     // Enviar fotos
