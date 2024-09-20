@@ -452,8 +452,8 @@ async function enviarHotel(idProducto) {
     // Mostrar el modal de "Enviando..." y deshabilitar el cierre
     mostrarModal('Enviando Hotel...', true); // El segundo argumento true deshabilita el cierre
     
-    // const id_conversacion = eventData.data.conversation.id;
-    const id_conversacion = '19666';
+    const id_conversacion = eventData.data.conversation.id;
+    // const id_conversacion = '19666';
     const urlImagen = productoSeleccionado.property_url_foto_destacada || '../assets/images/default_image.png'; // Asegúrate de que este campo tenga la URL correcta
     const urlPage = productoSeleccionado.url;
     const name = productoSeleccionado.name.trim();
